@@ -1,0 +1,16 @@
+{
+    "name": "decode PWA example",
+    "short_name": "decode PWA example",
+    "start_url": ".",
+    "background_color": "#6dcdb1",
+    "theme_color": "#009578",
+    "display": "standalone",
+    "icons": [
+        {
+        "src" : "images/icon.png",
+        "sizes": "192x192",
+        "type": "images/png"
+        }
+    ]
+    
+}
