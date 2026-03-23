@@ -42,7 +42,7 @@ body {
     backdrop-filter: blur(4px);
     padding: 10px 20px; /* Increased padding from 8px 16px */
     border-radius: 60px;
-    font-size: 1rem; /* Slightly increased from 0.95rem */
+    font-size: .86rem; /* Slightly increased from 0.95rem */
     font-weight: 500;
     display: inline-flex;
     align-items: center;
@@ -52,7 +52,7 @@ body {
 }
 
 .location-badge i {
-    font-size: 1rem; /* Increased from 0.9rem */
+    font-size: .86rem; /* Increased from 0.9rem */
     color: #60a5fa;
 }
 
@@ -69,7 +69,7 @@ body {
     justify-content: center;
     border-radius: 40px;
     cursor: pointer;
-    font-size: 26px; /* Increased from 24px */
+    font-size: 20px; /* Increased from 24px */
     font-weight: 500;
     transition: all 0.2s;
     backdrop-filter: blur(4px);
@@ -100,7 +100,7 @@ body {
     padding: 14px 16px; /* Increased from 12px 14px */
     cursor: pointer;
     border-radius: 18px;
-    font-size: 0.9rem; /* Increased from 0.85rem */
+    font-size: 0.78rem; /* Increased from 0.85rem */
     font-weight: 500;
     transition: 0.2s;
     display: flex;
@@ -130,7 +130,7 @@ body {
 }
 
 .aqi-value {
-    font-size: 102px; /* Increased from 92px */
+    font-size: 87px; /* Increased from 92px */
     font-weight: 800;
     letter-spacing: -2px;
     background: linear-gradient(135deg, #ffffff, #b9e0ff);
@@ -143,7 +143,7 @@ body {
 }
 
 .aqi-status {
-    font-size: 28px; /* Increased from 26px */
+    font-size: 20px; /* Increased from 26px */
     font-weight: 600;
     margin: 16px 0 8px; /* Increased from 12px 0 4px */
     display: flex;
@@ -184,11 +184,11 @@ body {
     gap: 12px; /* Increased from 10px */
     font-weight: 600;
     margin-bottom: 12px; /* Increased from 8px */
-    font-size: 1.2rem; /* Increased from 1.1rem */
+    font-size: .90rem; /* Increased from 1.1rem */
 }
 
 .alert p {
-    font-size: 0.95rem; /* Increased from 0.9rem */
+    font-size: 0.86rem; /* Increased from 0.9rem */
     opacity: 0.9;
     line-height: 1.5; /* Added for better readability */
 }
