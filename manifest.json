@@ -1,6 +1,6 @@
 {
-    "name": "decode PWA example",
-    "short_name": "decode PWA example",
+    "name": "Healthex",
+    "short_name": "Healthex",
     "start_url": ".",
     "background_color": "#6dcdb1",
     "theme_color": "#009578",
