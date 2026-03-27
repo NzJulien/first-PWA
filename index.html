@@ -1,101 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#0f172a">
-    <title>AuraSense | Air Quality PWA</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="images/icon.png">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./src/master.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#050d1a" />
+  <title>AuraSense | Air Quality</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./src/master.css" />
 </head>
 <body>
 
-<div class="app">
+<!-- ═══════════════════════════════════════════ AUTH SCREEN ══ -->
+<div id="screen-auth" class="screen active">
+  <div class="auth-bg">
+    <div class="auth-orb orb1"></div>
+    <div class="auth-orb orb2"></div>
+    <div class="auth-orb orb3"></div>
+    <div class="auth-noise"></div>
+  </div>
 
-    <header class="header">
-        <div class="location-badge">
-            <i class="fas fa-map-marker-alt"></i> Buea, Cameroon
-            <i class="fas fa-chevron-down" style="font-size: 10px; opacity: 0.6;"></i>
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="brand-icon"><i class="fas fa-wind"></i></div>
+      <h1>AuraSense</h1>
+      <p>Real-time air quality intelligence</p>
+    </div>
+
+    <!-- Login Form -->
+    <div id="form-login" class="auth-card">
+      <h2>Welcome back</h2>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-eye">
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+          <i class="fas fa-eye toggle-eye" onclick="togglePwd('login-password',this)"></i>
         </div>
-        <div class="menu-container">
-            <div class="menu-btn" onclick="toggleMenu()">
-                <i class="fas fa-ellipsis-h"></i>
-            </div>
-            <div id="dropdown" class="dropdown">
-                <p onclick="handleMenu('details')"><i class="fas fa-chart-line"></i> Details</p>
-                <p onclick="handleMenu('alerts')"><i class="fas fa-bell"></i> Alerts</p>
-                <p onclick="handleMenu('settings')"><i class="fas fa-sliders-h"></i> Settings</p>
-            </div>
+      </div>
+      <p id="login-error" class="auth-error"></p>
+      <button class="btn-primary" onclick="handleLogin()">
+        <span>Sign in</span><i class="fas fa-arrow-right"></i>
+      </button>
+      <p class="auth-switch">No account? <a onclick="switchForm('register')">Create one</a></p>
+    </div>
+
+    <!-- Register Form -->
+    <div id="form-register" class="auth-card hidden">
+      <h2>Create account</h2>
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="reg-name" placeholder="Jane Doe" autocomplete="name" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-eye">
+          <input type="password" id="reg-password" placeholder="Min. 6 characters" autocomplete="new-password" />
+          <i class="fas fa-eye toggle-eye" onclick="togglePwd('reg-password',this)"></i>
         </div>
+      </div>
+      <p id="reg-error" class="auth-error"></p>
+      <button class="btn-primary" onclick="handleRegister()">
+        <span>Create account</span><i class="fas fa-arrow-right"></i>
+      </button>
+      <p class="auth-switch">Already have an account? <a onclick="switchForm('login')">Sign in</a></p>
+    </div>
+
+    <!-- Email confirm notice -->
+    <div id="form-confirm" class="auth-card hidden">
+      <div class="confirm-icon"><i class="fas fa-envelope-open-text"></i></div>
+      <h2>Check your email</h2>
+      <p class="confirm-msg">We sent a confirmation link to <strong id="confirm-email-display"></strong>. Click it to activate your account, then sign in.</p>
+      <button class="btn-primary" onclick="switchForm('login')">Back to sign in</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ MAIN APP ══ -->
+<div id="screen-app" class="screen hidden">
+
+  <!-- ── PAGE: HOME ── -->
+  <div id="page-home" class="page active">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="location-pill" id="locationPill">
+          <i class="fas fa-location-dot"></i>
+          <span id="locationText">Locating…</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="avatar-btn" id="avatarBtn">
+          <span id="avatarInitial">?</span>
+        </div>
+      </div>
     </header>
 
-
-    <section class="aqi-section" id="aqiSection">
-        <div class="aqi-value" id="aqiValue">72</div>
-        <div class="aqi-status" id="aqiStatus">
-            <i class="fas fa-smog"></i> Moderate
+    <main class="home-main">
+      <!-- Hero AQI -->
+      <section class="hero-card" id="heroCard">
+        <div class="hero-ring" id="heroRing">
+          <div class="ring-inner">
+            <div class="aqi-num" id="aqiValue">–</div>
+            <div class="aqi-unit">AQI</div>
+          </div>
         </div>
-        <div class="aqi-message" id="aqiMessage">Air quality is acceptable, but sensitive individuals should watch out.</div>
-    </section>
-
-    <!-- Health Alert (dynamic) -->
-    <section class="card alert" id="alertCard">
-        <h3><i class="fas fa-heartbeat"></i> Health Insight</h3>
-        <p id="healthAdvice">Sensitive individuals: reduce prolonged outdoor exertion.</p>
-    </section>
-
-
-    <section class="card stats">
-        <div class="stat">
-            <p><i class="fas fa-microscope"></i> PM2.5</p>
-            <h4 id="pm25">35</h4>
+        <div class="hero-info">
+          <div class="aqi-badge" id="aqiBadge"><i class="fas fa-circle-notch fa-spin"></i> Loading…</div>
+          <p class="aqi-desc" id="aqiDesc">Fetching your local air quality…</p>
         </div>
-        <div class="stat">
-            <p><i class="fas fa-wind"></i> PM10</p>
-            <h4 id="pm10">60</h4>
+        <div class="last-updated" id="lastUpdated"></div>
+      </section>
+
+      <!-- Health alert -->
+      <section class="alert-strip" id="alertStrip">
+        <i class="fas fa-heart-pulse"></i>
+        <p id="healthAdvice">–</p>
+      </section>
+
+      <!-- Pollutants grid -->
+      <section class="pollutants-grid">
+        <div class="poll-card" id="card-pm25">
+          <div class="poll-icon"><i class="fas fa-circle-nodes"></i></div>
+          <div class="poll-label">PM2.5</div>
+          <div class="poll-val" id="pm25">–</div>
+          <div class="poll-unit">µg/m³</div>
+          <div class="poll-bar"><div class="poll-fill" id="bar-pm25"></div></div>
         </div>
-        <div class="stat">
-            <p><i class="fas fa-industry"></i> CO</p>
-            <h4 id="co">0.8</h4>
+        <div class="poll-card" id="card-pm10">
+          <div class="poll-icon"><i class="fas fa-smog"></i></div>
+          <div class="poll-label">PM10</div>
+          <div class="poll-val" id="pm10">–</div>
+          <div class="poll-unit">µg/m³</div>
+          <div class="poll-bar"><div class="poll-fill" id="bar-pm10"></div></div>
         </div>
-        <div class="stat">
-            <p><i class="fas fa-leaf"></i> NO₂</p>
-            <h4 id="no2">24</h4>
+        <div class="poll-card" id="card-co">
+          <div class="poll-icon"><i class="fas fa-industry"></i></div>
+          <div class="poll-label">CO</div>
+          <div class="poll-val" id="co">–</div>
+          <div class="poll-unit">mg/m³</div>
+          <div class="poll-bar"><div class="poll-fill" id="bar-co"></div></div>
         </div>
-    </section>
-
-
-    <section class="actions">
-        <button id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
-        <button id="detailsBtn"><i class="fas fa-chart-simple"></i> Details</button>
-    </section>
-</div>
-
-
-<div class="nav">
-    <span class="nav-item active" data-tab="home"><i class="fas fa-home"></i> Home</span>
-    <span class="nav-item" data-tab="stats"><i class="fas fa-chart-line"></i> Maps</span>
-    <span class="nav-item" data-tab="insights"><i class="fas fa-microchip"></i> Insights</span>
-    <span class="nav-item" data-tab="profile"><i class="fas fa-user"></i> Profile</span>
-</div>
-
-
-<div id="globalModal" class="modal-overlay">
-    <div class="modal-card">
-        <h3 id="modalTitle">Details</h3>
-        <div id="modalBody">
-            <p>Real-time AQI metrics: PM2.5, PM10, CO, NO₂. Air quality index computed from sensor network.</p>
-            <p><strong>Recommendation:</strong> Keep windows slightly open for ventilation.</p>
+        <div class="poll-card" id="card-no2">
+          <div class="poll-icon"><i class="fas fa-leaf"></i></div>
+          <div class="poll-label">NO₂</div>
+          <div class="poll-val" id="no2">–</div>
+          <div class="poll-unit">µg/m³</div>
+          <div class="poll-bar"><div class="poll-fill" id="bar-no2"></div></div>
         </div>
-        <button class="close-modal" onclick="closeModal()">Got it</button>
+      </section>
+
+      <!-- Refresh -->
+      <button class="refresh-btn" onclick="loadAQI()">
+        <i class="fas fa-rotate-right" id="refreshIcon"></i> Refresh
+      </button>
+    </main>
+  </div>
+
+  <!-- ── PAGE: MAPS ── -->
+  <div id="page-maps" class="page hidden">
+    <header class="topbar">
+      <h2 class="page-title">Air Map</h2>
+      <div class="map-legend-btn" onclick="toggleLegend()"><i class="fas fa-layer-group"></i></div>
+    </header>
+    <div id="map-legend" class="map-legend hidden">
+      <div class="legend-row"><span class="leg-dot" style="background:#00e400"></span> Good (0–50)</div>
+      <div class="legend-row"><span class="leg-dot" style="background:#ffff00"></span> Moderate (51–100)</div>
+      <div class="legend-row"><span class="leg-dot" style="background:#ff7e00"></span> Unhealthy for Sensitive</div>
+      <div class="legend-row"><span class="leg-dot" style="background:#ff0000"></span> Unhealthy (151–200)</div>
+      <div class="legend-row"><span class="leg-dot" style="background:#8f3f97"></span> Very Unhealthy</div>
+      <div class="legend-row"><span class="leg-dot" style="background:#7e0023"></span> Hazardous</div>
     </div>
-</div>
+    <div id="worldMap" class="world-map"></div>
+    <div class="map-info-panel" id="mapInfoPanel">
+      <p class="map-hint"><i class="fas fa-hand-pointer"></i> Tap anywhere on the map to check AQI</p>
+    </div>
+  </div>
 
-<script src="./src/index.js"></script>
+  <!-- ── PAGE: INSIGHTS ── -->
+  <div id="page-insights" class="page hidden">
+    <header class="topbar">
+      <h2 class="page-title">Insights</h2>
+    </header>
+    <main class="insights-main">
+      <section class="insight-hero">
+        <div class="insight-score-wrap">
+          <canvas id="forecastChart" width="340" height="180"></canvas>
+        </div>
+        <p class="insight-caption">48-hour AQI forecast for your location</p>
+      </section>
+
+      <section class="insight-tips" id="insightTips">
+        <h3>Today's Recommendations</h3>
+        <div class="tip-list" id="tipList">
+          <div class="tip-item"><i class="fas fa-running"></i><div><strong>Outdoor exercise</strong><p id="tip-exercise">Loading…</p></div></div>
+          <div class="tip-item"><i class="fas fa-window-maximize"></i><div><strong>Windows</strong><p id="tip-windows">Loading…</p></div></div>
+          <div class="tip-item"><i class="fas fa-mask-face"></i><div><strong>Mask</strong><p id="tip-mask">Loading…</p></div></div>
+          <div class="tip-item"><i class="fas fa-child-reaching"></i><div><strong>Children & Elderly</strong><p id="tip-sensitive">Loading…</p></div></div>
+        </div>
+      </section>
+
+      <section class="forecast-list" id="forecastList">
+        <h3>Hourly Forecast</h3>
+        <div id="forecastItems" class="forecast-scroll"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ── PAGE: PROFILE ── -->
+  <div id="page-profile" class="page hidden">
+    <header class="topbar">
+      <h2 class="page-title">Profile</h2>
+    </header>
+    <main class="profile-main">
+      <div class="profile-hero">
+        <div class="profile-avatar" id="profileAvatar">?</div>
+        <h3 id="profileName">–</h3>
+        <p id="profileEmail">–</p>
+      </div>
+
+      <section class="profile-section">
+        <h4>Alert Settings</h4>
+        <div class="setting-row">
+          <div>
+            <strong>AQI Threshold</strong>
+            <p>Notify me when AQI level reaches</p>
+          </div>
+          <select id="alertThreshold" onchange="saveAlertPrefs()">
+            <option value="2">Fair (2)</option>
+            <option value="3" selected>Moderate (3)</option>
+            <option value="4">Poor (4)</option>
+            <option value="5">Very Poor (5)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong>Push Notifications</strong>
+            <p>Receive browser alerts</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="notifToggle" onchange="toggleNotifications()" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="profile-section">
+        <h4>Saved Locations</h4>
+        <div id="savedLocations" class="saved-locs">
+          <p class="empty-state">No saved locations yet.</p>
+        </div>
+        <button class="btn-outline" onclick="saveCurrentLocation()">
+          <i class="fas fa-plus"></i> Save current location
+        </button>
+      </section>
+
+      <section class="profile-section">
+        <h4>Account</h4>
+        <div class="setting-row clickable" onclick="showEditProfile()">
+          <div><strong>Edit Profile</strong><p>Name and email</p></div>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="setting-row clickable" onclick="handleLogout()">
+          <div><strong style="color:#f87171">Sign out</strong><p>Log out of your account</p></div>
+          <i class="fas fa-arrow-right-from-bracket" style="color:#f87171"></i>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ── BOTTOM NAV ── -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="home" onclick="switchPage('home',this)">
+      <i class="fas fa-house"></i><span>Home</span>
+    </button>
+    <button class="nav-btn" data-page="maps" onclick="switchPage('maps',this)">
+      <i class="fas fa-map"></i><span>Maps</span>
+    </button>
+    <button class="nav-btn" data-page="insights" onclick="switchPage('insights',this)">
+      <i class="fas fa-chart-line"></i><span>Insights</span>
+    </button>
+    <button class="nav-btn" data-page="profile" onclick="switchPage('profile',this)">
+      <i class="fas fa-user"></i><span>Profile</span>
+    </button>
+  </nav>
+
+</div><!-- /screen-app -->
+
+<!-- Leaflet for world map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script src="./src/config.js"></script>
+<script src="./src/auth.js"></script>
+<script src="./src/api.js"></script>
+<script src="./src/map.js"></script>
+<script src="./src/insights.js"></script>
+<script src="./src/profile.js"></script>
+<script src="./src/app.js"></script>
 </body>
 </html>
